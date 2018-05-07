@@ -4,10 +4,10 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 public abstract class UpgradeSystem {
-    private FailStack fs = null;
+    private FailStack failstack = null;
 
     public UpgradeSystem(){
-        this.fs = FailStack.getFailStack();
+        this.failstack = FailStack.getFailStack();
     }
 
     /**
@@ -16,32 +16,43 @@ public abstract class UpgradeSystem {
      */
     public abstract boolean upgradeItem(int upgradeLevel);
 
-    protected boolean enchantItem(float itemMinPercentage, float itemIncreasePerFs, int itemLimitFs){
+    /**
+     * @param itemMinPercentage Minimum percentage a item have to succeed on upgrade.
+     * @param failStackBonus Total bonus percentage from fail stacks.
+     * @return False if item failed on upgrade, True if item succeeded on upgrade.
+     */
+    protected boolean upgrade(float itemMinPercentage, float failStackBonus){
         double percentage = 100 * Math.random();
-        float fsBonus;
 
-        if(fs.getStacks() >= itemLimitFs){
-            fsBonus = itemIncreasePerFs * itemLimitFs;
-        } else {
-            fsBonus = itemIncreasePerFs * fs.getStacks();
-        }
-
-        showMessage(itemMinPercentage, fsBonus);
-
-        if(percentage < itemMinPercentage + fsBonus){
-            fs.setStacks(0);
+        if(percentage < itemMinPercentage + failStackBonus){
+            failstack.setStacks(0);
             return true;
         } else {
-            fs.addStacks(1);
+            failstack.addStacks(1);
             return false;
         }
     }
 
-    private void showMessage(float itemMinPercentage, float fsBonus){
-        System.out.println("Você tem " + fs.getStacks() + " fail stacks.");
+    /**
+     * @param itemIncreasePerFs How much percentage of success will increase per fail stack.
+     * @param itemLimitFs Maximum fail stack a item accepts.
+     *                    (It's possible to stack above the maximum limit, but extra fail stacks will not increase
+     *                    bonus percentage on upgrade attempt).
+     * @return Total bonus percentage from fail stacks.
+     */
+    protected float getFailStackBonus(float itemIncreasePerFs, int itemLimitFs){
+        if(failstack.getStacks() >= itemLimitFs){
+            return itemIncreasePerFs * itemLimitFs;
+        } else {
+            return itemIncreasePerFs * failstack.getStacks();
+        }
+    }
+
+    private void showMessage(float itemMinPercentage, float failStackBonus){
+        System.out.println("Você tem " + failstack.getStacks() + " fail stacks.");
 
         NumberFormat formatter = new DecimalFormat("#.##");
-        String totalPercentageChance = formatter.format(itemMinPercentage + fsBonus);
+        String totalPercentageChance = formatter.format(itemMinPercentage + failStackBonus);
 
         System.out.println("Chance de Upgrade: " + totalPercentageChance + "%");
     }

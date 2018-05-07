@@ -28,15 +28,20 @@ public class ArmorUpgrade extends UpgradeSystem{
 
         switch(upgradeLevel){
             case 1:
-                return enchantItem(ARMOR_PRI_MIN_PERCENTAGE, ARMOR_INCREASE_PER_FS_PRI, ARMOR_LIMIT_FS_PRI);
+                return upgrade(ARMOR_PRI_MIN_PERCENTAGE,
+                        getFailStackBonus(ARMOR_INCREASE_PER_FS_PRI, ARMOR_LIMIT_FS_PRI));
             case 2:
-                return enchantItem(ARMOR_DUO_MIN_PERCENTAGE, ARMOR_INCREASE_PER_FS_DUO, ARMOR_LIMIT_FS_DUO);
+                return upgrade(ARMOR_DUO_MIN_PERCENTAGE,
+                        getFailStackBonus(ARMOR_INCREASE_PER_FS_DUO, ARMOR_LIMIT_FS_DUO));
             case 3:
-                return enchantItem(ARMOR_TRI_MIN_PERCENTAGE, ARMOR_INCREASE_PER_FS_TRI, ARMOR_LIMIT_FS_TRI);
+                return upgrade(ARMOR_TRI_MIN_PERCENTAGE,
+                        getFailStackBonus(ARMOR_INCREASE_PER_FS_TRI, ARMOR_LIMIT_FS_TRI));
             case 4:
-                return enchantItem(ARMOR_TET_MIN_PERCENTAGE, ARMOR_INCREASE_PER_FS_TET, ARMOR_LIMIT_FS_TET);
+                return upgrade(ARMOR_TET_MIN_PERCENTAGE,
+                        getFailStackBonus(ARMOR_INCREASE_PER_FS_TET, ARMOR_LIMIT_FS_TET));
             case 5:
-                return enchantItem(ARMOR_PEN_MIN_PERCENTAGE, ARMOR_INCREASE_PER_FS_PEN, ARMOR_LIMIT_FS_PEN);
+                return upgrade(ARMOR_PEN_MIN_PERCENTAGE,
+                        getFailStackBonus(ARMOR_INCREASE_PER_FS_PEN, ARMOR_LIMIT_FS_PEN));
             default:
                 System.out.println("Invalid enchantment!");
                 return false;
